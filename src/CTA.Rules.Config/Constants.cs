@@ -91,6 +91,7 @@ namespace CTA.Rules.Config
         //Config migration
         public const string AppSettingsJson = "appsettings.json";
         public const string AppSettings = "appsettings";
+        public const string AppConfig = "App.config";
         public const string WebConfig = "web.config";
         public const string Name = "name";
         public const string ConnectionstringsLower = "connectionstrings";

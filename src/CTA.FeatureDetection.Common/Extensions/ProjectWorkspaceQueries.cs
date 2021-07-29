@@ -56,7 +56,15 @@ namespace CTA.FeatureDetection.Common.Extensions
         /// <returns>Collection of class declaration nodes in the project with the specified base type</returns>
         public static IEnumerable<ClassDeclaration> GetClassDeclarationsByBaseType(this ProjectWorkspace project,
             string baseTypeOriginalDefinition)
-            => project.GetAllClassDeclarations().Where(c => c.HasBaseType(baseTypeOriginalDefinition));
+            =>project.GetAllClassDeclarations();
+
+        /// <summary>
+        /// Gets all interface declaration nodes in a ProjectWorkspace.e
+        /// </summary>
+        /// <param name="project">ProjectWorkspace to search</param>
+        /// <returns>Collection of interface declaration nodes in the project</returns>
+        public static IEnumerable<InterfaceDeclaration> GetAllInterfaceDeclarations(this ProjectWorkspace project)
+            => project.SourceFileResults.SelectMany(r => r.AllInterfaces());
 
         /// <summary>
         /// Determines if a specified directory exists in the project directory and is non-empty

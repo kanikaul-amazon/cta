@@ -24,5 +24,18 @@
         public const string WebClassLibraryFeatureName = "WebClassLibraryFeature";
         public const string AspNetCoreMvcFeatureName = "AspNetCoreMvcFeature";
         public const string AspNetCoreWebApiFeatureName = "AspNetCoreWebApiFeature";
+
+        internal const string SystemServiceModelElement = "system.serviceModel";
+        internal const string WCFClientElement = "client";
+        internal const string WCFServiceElement = "services";
+        internal const string WCFServiceEndpoint = "endpoint";
+        internal const string ServiceContractAttribute = "ServiceContractAttribute";
+        internal const string OperationContractAttribute = "OperationContractAttribute";
+        internal const string BindingsAttribute = "bindings";
+
+        internal const string ConfigurationElement = "configuration";
+        internal static readonly string WCFClientElementPath = $"{ConfigurationElement}/{SystemServiceModelElement}/{WCFClientElement}";
+        internal static readonly string WCFServiceElementPath = $"{ConfigurationElement}/{SystemServiceModelElement}/{WCFServiceElement}";
+        internal static readonly string WCFServiceEndpointElementPath = $"{ConfigurationElement}/{SystemServiceModelElement}/{WCFServiceEndpointElementPath}";
     }
 }
