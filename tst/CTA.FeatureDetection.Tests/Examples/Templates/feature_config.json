@@ -28,6 +28,10 @@
                 {
                   "Name": "WebClassLibraryFeature",
                   "ClassName": "WebClassLibraryFeature"
+                },
+                {
+                  "Name": "WCFServiceFeature",
+                  "ClassName": "WCFServiceFeature"
                 }
               ]
             }
