@@ -74,5 +74,15 @@ namespace CTA.FeatureDetection.ProjectType.Extensions
         {
             return featureDetectionResult.FeatureStatus.GetValueOrDefault(Constants.WebClassLibraryFeatureName, false);
         }
+
+        /// <summary>
+        /// Queries a FeatureDetectionResult object to determine if the project is a WCF Service Project.
+        /// </summary>
+        /// <param name="featureDetectionResult"></param>
+        /// <returns>Whether or not the project is a WCF Service Project</returns>
+        public static bool IsWCFServiceProject(this FeatureDetectionResult featureDetectionResult)
+        {
+            return featureDetectionResult.FeatureStatus.GetValueOrDefault(Constants.WCFServiceFeatureName, false);
+        }
     }
 }

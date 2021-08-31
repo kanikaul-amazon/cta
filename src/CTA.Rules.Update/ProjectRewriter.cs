@@ -24,6 +24,7 @@ namespace CTA.Rules.Update
         private readonly List<string> _projectReferences;
         private readonly ProjectResult _projectResult;
         private readonly List<string> _metaReferences;
+        private readonly AnalyzerResult _analyzerResult;
 
         /// <summary>
         /// Initializes a new instance of ProjectRewriter using an existing analysis
@@ -45,6 +46,7 @@ namespace CTA.Rules.Update
                 MissingMetaReferences = analyzerResult?.ProjectBuildResult?.MissingReferences
         };
 
+            _analyzerResult = analyzerResult;
             _sourceFileBuildResults = analyzerResult?.ProjectBuildResult?.SourceFileBuildResults;
             _sourceFileResults = analyzerResult?.ProjectResult?.SourceFileResults;
             _projectReferences = analyzerResult?.ProjectBuildResult?.ExternalReferences?.ProjectReferences.Select(p => p.AssemblyLocation).ToList();
@@ -129,7 +131,7 @@ namespace CTA.Rules.Update
         public ProjectResult Run(ProjectActions projectActions)
         {
             _projectResult.ProjectActions = projectActions;
-            CodeReplacer baseReplacer = new CodeReplacer(_sourceFileBuildResults, RulesEngineConfiguration, _metaReferences);
+            CodeReplacer baseReplacer = new CodeReplacer(_sourceFileBuildResults, RulesEngineConfiguration, _metaReferences, _analyzerResult);
             _projectResult.ExecutedActions = baseReplacer.Run(projectActions, RulesEngineConfiguration.ProjectType);
             return _projectResult;
         }
@@ -145,7 +147,7 @@ namespace CTA.Rules.Update
             RulesAnalysis walker = new RulesAnalysis(_sourceFileResults, projectRules);
             var projectActions = walker.Analyze();
 
-            CodeReplacer baseReplacer = new CodeReplacer(_sourceFileBuildResults, RulesEngineConfiguration, _metaReferences, updatedFiles);
+            CodeReplacer baseReplacer = new CodeReplacer(_sourceFileBuildResults, RulesEngineConfiguration, _metaReferences, _analyzerResult, updatedFiles);
             _projectResult.ExecutedActions = baseReplacer.Run(projectActions, RulesEngineConfiguration.ProjectType);
 
             ideFileActions = projectActions

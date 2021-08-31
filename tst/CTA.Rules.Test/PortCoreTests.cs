@@ -125,6 +125,15 @@ namespace CTA.Rules.Test
             return Directory.GetParent(results.SolutionRunResult.SolutionPath).FullName;
         }
 
+        [Test]
+        public void TestWCFService(string version)
+        {
+            var solutionPath = CopySolutionFolderToTemp("GettingStarted.sln", tempDir);
+            TestSolutionAnalysis results = AnalyzeSolution(solutionPath, version);
+
+
+        }
+
         [TestCase(TargetFramework.DotnetCoreApp31)]
         public void TestWebApiWithReferences(string version)
         {

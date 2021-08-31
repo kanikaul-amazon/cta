@@ -8,16 +8,16 @@ namespace CTA.FeatureDetection.Tests.FeatureDetection.ProjectType
         [Test]
         public void WCFService_Config_Project()
         {
-            var featureName = "WCFServiceFeature";
+            var featureName = "CoreWCFCompatibleServiceFeature";
             Assert.True(_wcfServiceFeatureDetectionResult.FeatureStatus[featureName],
-                $"Expected WCF Service Class.");
+                $"Expected CoreWCF Compatible Service Class.");
         }
         [Test]
         public void WCFService_SelfHosted_Project()
         {
-            var featureName = "WCFServiceFeature";
+            var featureName = "CoreWCFCompatibleServiceFeature";
             Assert.True(_wcfSelfHostedFeatureDetectionResult.FeatureStatus[featureName],
-                $"Expected WCF Service Class.");
+                $"Expected CoreWCF Compatible Service Class.");
         }
         [Test]
         public void AspnetCoreMvcFeature_Is_Present_In_CoreMvc_Project()

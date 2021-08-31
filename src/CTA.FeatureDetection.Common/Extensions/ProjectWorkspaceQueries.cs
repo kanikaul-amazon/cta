@@ -66,6 +66,9 @@ namespace CTA.FeatureDetection.Common.Extensions
         public static IEnumerable<InterfaceDeclaration> GetAllInterfaceDeclarations(this ProjectWorkspace project)
             => project.SourceFileResults.SelectMany(r => r.AllInterfaces());
 
+        public static IEnumerable<InvocationExpression> GetInvocationExpressionsByMethodName(this ProjectWorkspace project, string methodName)
+            => project.SourceFileResults.SelectMany(r => r.AllInvocationExpressions().Where(i => i.MethodName == methodName));
+
         /// <summary>
         /// Determines if a specified directory exists in the project directory and is non-empty
         /// </summary>
@@ -82,5 +85,9 @@ namespace CTA.FeatureDetection.Common.Extensions
 
             return directories.Any(d => Directory.EnumerateFiles(d, "*", searchOption).Any());
         }
+
+
+        public static IEnumerable<ObjectCreationExpression> GetObjectCreationExpressionBySemanticClassType(this ProjectWorkspace project, string semanticClassType)
+            => project.SourceFileResults.SelectMany(r => r.AllObjectCreationExpressions().Where(o => o.SemanticClassType.Equals(semanticClassType)));
     }
 }

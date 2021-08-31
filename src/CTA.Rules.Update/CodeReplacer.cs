@@ -5,12 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Codelyzer.Analysis;
 using Codelyzer.Analysis.Build;
 using CTA.FeatureDetection.Common.Extensions;
 using CTA.Rules.Config;
 using CTA.Rules.Models;
+using CTA.Rules.PortCore;
 using CTA.Rules.Update.Rewriters;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using TextChange = CTA.Rules.Models.TextChange;
 using TextSpan = Codelyzer.Analysis.Model.TextSpan;
@@ -22,14 +25,17 @@ namespace CTA.Rules.Update
         private readonly ProjectConfiguration _projectConfiguration;
         private readonly IEnumerable<SourceFileBuildResult> _sourceFileBuildResults;
         private readonly List<string> _metadataReferences;
+        private readonly AnalyzerResult _analyzerResult;
 
-        public CodeReplacer(List<SourceFileBuildResult> sourceFileBuildResults, ProjectConfiguration projectConfiguration, List<string> metadataReferences, List<string> updatedFiles = null)
+        public CodeReplacer(List<SourceFileBuildResult> sourceFileBuildResults, ProjectConfiguration projectConfiguration, List<string> metadataReferences, AnalyzerResult analyzerResult,
+            List<string> updatedFiles = null)
         {
             _sourceFileBuildResults = sourceFileBuildResults;
             if(updatedFiles != null)
             {
                 _sourceFileBuildResults = _sourceFileBuildResults.Where(s => updatedFiles.Contains(s.SourceFileFullPath));
             }
+            _analyzerResult = analyzerResult;
             _projectConfiguration = projectConfiguration;
             _metadataReferences = metadataReferences;
         }
@@ -84,6 +90,37 @@ namespace CTA.Rules.Update
                     LogHelper.LogError(new FilePortingException(Constants.Project, new Exception("Error adding project to actions collection")));
                 }
             }
+
+            var projectDir = Path.GetDirectoryName(_projectConfiguration.ProjectPath);
+            if(File.Exists(Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs")))
+            {
+                if(_projectConfiguration.ProjectType == ProjectType.WebApi)
+                {
+                    var programFileTree = CSharpSyntaxTree.ParseText(File.ReadAllText(Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs")));
+
+                    programFileTree = CSharpSyntaxTree.ParseText(@"
+class Program {
+            static void Main(string[] args)
+            {
+                WebHost.CreateDefaultBuilder(args)
+                 .UseKestrel(options => {})
+                 .UseStartup<Startup>();
+
+            }"
+                        );
+
+                    WCFServicePort wcfServicePort = new WCFServicePort(projectDir, _analyzerResult);
+
+                    var newRootNode = wcfServicePort.replaceProgramFile(programFileTree);
+
+                    File.WriteAllText(Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs"), newRootNode.ToFullString());
+
+                    string newFile = File.ReadAllText(Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs"));
+                }
+            }
+
+            var files = Directory.GetFiles(projectDir);
+
             return actionsPerProject.ToDictionary(a => a.Key, a => a.Value);
         }
 
@@ -195,6 +232,7 @@ namespace CTA.Rules.Update
             }
             return projectRunActions;
         }
+
 
         private List<GenericActionExecution> AddActionsWithoutExecutions(FileActions currentFileActions, List<GenericActionExecution> allActions)
         {

@@ -53,7 +53,6 @@ namespace CTA.FeatureDetection.Tests.Utils
                     ReferenceData = true,
                     LoadBuildData = true,
                     ReturnStatements = true,
-                    InterfaceDeclarations = true
     }
             };
 
