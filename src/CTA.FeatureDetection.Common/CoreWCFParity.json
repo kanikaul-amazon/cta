@@ -1,0 +1,17 @@
+﻿{
+  "features": {
+    "bindings": {
+      "BasichttpBinding": [
+        "None",
+        "Transport"
+        :
+        {}
+      ],
+      "NetTCPBinding": [
+        "None",
+        "Transport",
+        "TransportWithMessageCredential" : {},
+      ]
+    }
+  }
+}

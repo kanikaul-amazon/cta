@@ -30,8 +30,8 @@
                   "ClassName": "WebClassLibraryFeature"
                 },
                 {
-                  "Name": "WCFServiceFeature",
-                  "ClassName": "WCFServiceFeature"
+                  "Name": "CoreWCFCompatibleServiceFeature",
+                  "ClassName": "CoreWCFCompatibleServiceFeature"
                 }
               ]
             }

@@ -25,9 +25,14 @@ namespace CTA.Rules.Common.WebConfigManagement
             return GetConfigProperties().Where(n => n.Name.LocalName == propertyName);
         }
 
+        public XElement GetElementByPath(string path)
+        {
+            return _webConfig.XPathSelectElement(path);
+        }
+
         public IEnumerable<XElement> GetElementsByPath(string path)
         {
-            return _webConfig.XPathSelectElements(path);        
+            return _webConfig.XPathSelectElements(path);
         }
 
         public bool ContainsElement(string elementPath)

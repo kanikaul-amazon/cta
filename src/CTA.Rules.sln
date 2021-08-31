@@ -36,11 +36,22 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E4C62BE5-F213-4805-A1AD-81477005540C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		D:\Users\kanikaul\Downloads\Kanishk\Kanishk\CoreWCF.ConfigurationManager.dll = D:\Users\kanikaul\Downloads\Kanishk\Kanishk\CoreWCF.ConfigurationManager.dll
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTA.FeatureDetection.AuthType", "CTA.FeatureDetection.AuthType\CTA.FeatureDetection.AuthType.csproj", "{7F508C93-ACD1-4322-BF40-454E386EE53C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTA.Rules.Common", "CTA.Rules.Common\CTA.Rules.Common.csproj", "{F3A3E693-81B4-46AF-9457-B10B20C6B2C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codelyzer.Analysis", "..\..\codelyzer\src\Analysis\Codelyzer.Analysis\Codelyzer.Analysis.csproj", "{AA91143C-56E6-428B-9ACB-80901FBA65BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codelyzer.Analysis.Build", "..\..\codelyzer\src\Analysis\Codelyzer.Analysis.Build\Codelyzer.Analysis.Build.csproj", "{5CE1C348-22A3-4DA9-B9D4-E6366524FCB6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codelyzer.Analysis.CSharp", "..\..\codelyzer\src\Analysis\Codelyzer.Analysis.CSharp\Codelyzer.Analysis.CSharp.csproj", "{5DD16A8D-E7E6-4987-AEEA-F46618A3AE10}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codelyzer.Analysis.Common", "..\..\codelyzer\src\Analysis\Codelyzer.Analysis.Common\Codelyzer.Analysis.Common.csproj", "{A4FA1E9A-E65D-418C-9E6C-DD4070B9694E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codelyzer.Analysis.Model", "..\..\codelyzer\src\Analysis\Codelyzer.Analysis.Model\Codelyzer.Analysis.Model.csproj", "{1E17313C-656E-485A-9E13-A23AE1468DAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +127,26 @@ Global
 		{F3A3E693-81B4-46AF-9457-B10B20C6B2C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3A3E693-81B4-46AF-9457-B10B20C6B2C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3A3E693-81B4-46AF-9457-B10B20C6B2C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA91143C-56E6-428B-9ACB-80901FBA65BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA91143C-56E6-428B-9ACB-80901FBA65BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA91143C-56E6-428B-9ACB-80901FBA65BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA91143C-56E6-428B-9ACB-80901FBA65BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CE1C348-22A3-4DA9-B9D4-E6366524FCB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CE1C348-22A3-4DA9-B9D4-E6366524FCB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CE1C348-22A3-4DA9-B9D4-E6366524FCB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CE1C348-22A3-4DA9-B9D4-E6366524FCB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DD16A8D-E7E6-4987-AEEA-F46618A3AE10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DD16A8D-E7E6-4987-AEEA-F46618A3AE10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DD16A8D-E7E6-4987-AEEA-F46618A3AE10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DD16A8D-E7E6-4987-AEEA-F46618A3AE10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4FA1E9A-E65D-418C-9E6C-DD4070B9694E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4FA1E9A-E65D-418C-9E6C-DD4070B9694E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4FA1E9A-E65D-418C-9E6C-DD4070B9694E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4FA1E9A-E65D-418C-9E6C-DD4070B9694E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E17313C-656E-485A-9E13-A23AE1468DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E17313C-656E-485A-9E13-A23AE1468DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E17313C-656E-485A-9E13-A23AE1468DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E17313C-656E-485A-9E13-A23AE1468DAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
