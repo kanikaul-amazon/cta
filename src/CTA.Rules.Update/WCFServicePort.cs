@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using Codelyzer.Analysis;
 using Codelyzer.Analysis.Model;
-using CoreWCF.Configuration;
 using CTA.FeatureDetection.Common.Extensions;
 using CTA.FeatureDetection.Common.WCFConfigUtils;
 using CTA.Rules.Common.WebConfigManagement;

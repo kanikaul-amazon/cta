@@ -154,47 +154,5 @@ namespace CTA.FeatureDetection.Common.WCFConfigUtils
                 }
             }
         }
-
-
-        //public Dictionary<string, int> getTransportAndPortCodeBased(ProjectWorkspace project)
-        //{
-        //    Dictionary<string, int> transportPortMap = new Dictionary<string, int>();
-        //    IEnumerable<InvocationExpression> addEnpointInvocations = project.GetInvocationExpressionsByMethodName(Constants.AddServiceEndpointType);
-
-        //    foreach (var addEnpointInvocation in addEnpointInvocations)
-        //    {
-
-        //        var argumentCount = addEnpointInvocation.Arguments.Count();
-
-        //        if (argumentCount == 1)
-        //        {
-        //            var endpointIdentifier = addEnpointInvocation.Arguments.First();
-
-        //            IEnumerable<ObjectCreationExpression> serviceEndpointObjectExpressions = project.GetObjectCreationExpressionBySemanticClassType(Constants.ServiceEndpointClass);
-
-        //            var endpointArgumentObjects = serviceEndpointObjectExpressions.
-        //                SelectMany(s => s.GetObjectCreationExpressionBySemanticNamespace(Constants.SystemServiceModelClass));
-
-        //            var bindingArgumentObjects = endpointArgumentObjects.Where(e => e.SemanticClassType != Constants.EndpointAddressType);
-
-        //            var bindingNames = bindingArgumentObjects.Select(b => b.SemanticClassType);
-
-        //            foreach (var bindingName in bindingNames)
-        //            {
-        //                var bindingNameFormatted = bindingName.ToString().ToLower();
-        //                bindingsTransportMap.AddKeyValue(bindingName, Constants.NoneMode);
-        //            }
-        //        }
-
-        //        var objectDeclarations = addEnpointInvocation.GetObjectCreationExpressionBySemanticNamespace(Constants.SystemServiceModelClass)?.First();
-
-        //        if (objectDeclarations != null)
-        //        {
-        //            var bindingName = objectDeclarations.SemanticClassType.ToLower();
-
-        //            bindingsTransportMap.AddKeyValue(bindingName, Constants.NoneMode);
-        //        }
-        //    }
-        //}
     }
 }

@@ -1729,36 +1729,11 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
-      "codelyzer.analysis.build": {
-        "type": "Project",
-        "dependencies": {
-          "Buildalyzer": "3.2.0",
-          "Buildalyzer.Logger": "3.2.0",
-          "Buildalyzer.Workspaces": "3.2.0",
-          "Codelyzer.Analysis.CSharp": "1.0.0",
-          "Microsoft.Extensions.Logging": "5.0.0",
-          "NuGet.Packaging": "5.9.1"
-        }
-      },
-      "codelyzer.analysis.common": {
-        "type": "Project",
-        "dependencies": {
-          "Codelyzer.Analysis.Model": "1.0.0",
-          "Newtonsoft.Json": "13.0.1"
-        }
-      },
-      "codelyzer.analysis.csharp": {
-        "type": "Project",
-        "dependencies": {
-          "Codelyzer.Analysis.Common": "1.0.0",
-          "Codelyzer.Analysis.Model": "1.0.0"
-        }
-      },
       "cta.rules.common": {
         "type": "Project",
         "dependencies": {
           "CTA.Rules.Config": "1.0.0",
-          "Codelyzer.Analysis": "1.0.0",
+          "Codelyzer.Analysis": "1.6.18-alpha-gb5c231484b",
           "System.Configuration.ConfigurationManager": "5.0.0"
         }
       },
