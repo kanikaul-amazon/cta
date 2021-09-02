@@ -91,37 +91,30 @@ namespace CTA.Rules.Update
                 }
             }
 
-            var projectDir = Path.GetDirectoryName(_projectConfiguration.ProjectPath);
-            if(File.Exists(Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs")))
+            if(_projectConfiguration.ProjectType == ProjectType.WCFService)
             {
-                if(_projectConfiguration.ProjectType == ProjectType.WebApi)
-                {
-                    var programFileTree = CSharpSyntaxTree.ParseText(File.ReadAllText(Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs")));
-
-                    programFileTree = CSharpSyntaxTree.ParseText(@"
-class Program {
-            static void Main(string[] args)
-            {
-                WebHost.CreateDefaultBuilder(args)
-                 .UseKestrel(options => {})
-                 .UseStartup<Startup>();
-
-            }"
-                        );
-
-                    WCFServicePort wcfServicePort = new WCFServicePort(projectDir, _analyzerResult);
-
-                    var newRootNode = wcfServicePort.replaceProgramFile(programFileTree);
-
-                    File.WriteAllText(Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs"), newRootNode.ToFullString());
-
-                    string newFile = File.ReadAllText(Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs"));
-                }
+                RunWCFChanges();
             }
 
-            var files = Directory.GetFiles(projectDir);
-
             return actionsPerProject.ToDictionary(a => a.Key, a => a.Value);
+        }
+
+        private void RunWCFChanges()
+        {
+            var projectDir = Path.GetDirectoryName(_projectConfiguration.ProjectPath);
+            var programFile = Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs");
+            if (File.Exists(programFile))
+            {
+                var programFileTree = CSharpSyntaxTree.ParseText(programFile);
+
+                WCFServicePort wcfServicePort = new WCFServicePort(projectDir, _analyzerResult);
+
+                var newRootNode = wcfServicePort.replaceProgramFile(programFileTree);
+
+                File.WriteAllText(programFile, newRootNode.ToFullString());
+
+                string newFile = File.ReadAllText(Path.Combine(projectDir, FileTypeCreation.Program.ToString() + ".cs"));
+            }
         }
 
         private void RunCodeChanges(SyntaxNode root, SourceFileBuildResult sourceFileBuildResult, FileActions currentFileActions, ConcurrentDictionary<string, List<GenericActionExecution>> actionsPerProject)

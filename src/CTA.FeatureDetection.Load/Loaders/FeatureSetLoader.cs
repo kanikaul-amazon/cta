@@ -96,7 +96,7 @@ namespace CTA.FeatureDetection.Load.Loaders
         /// <returns>Default FeatureSet</returns>
         public static FeatureSet LoadDefaultFeatureSet()
         {
-            return LoadFeatureSetFromFeatureConfigFile(Constants.DefaultFeatureConfigPath);
+            return LoadFeatureSetFromFeatureConfigFile(Constants.TestFeatureConfigPath);
         }
     }
 }

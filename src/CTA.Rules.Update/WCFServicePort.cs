@@ -7,6 +7,8 @@ using System.Text;
 using Codelyzer.Analysis;
 using Codelyzer.Analysis.Model;
 using CoreWCF.Configuration;
+using CTA.FeatureDetection.Common.Extensions;
+using CTA.FeatureDetection.Common.WCFConfigUtils;
 using CTA.Rules.Common.WebConfigManagement;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -17,9 +19,9 @@ namespace CTA.Rules.PortCore
     public class WCFServicePort
     {
 
-        private static readonly string HTTP_PROTOCOL = "http";
-        private static readonly string HTTPS_PROTOCOL = "https";
-        private static readonly string TCP_PROTOCOL = "nettcp";
+        private static readonly string HTTP_PROTOCOL = "basichttpbinding";
+        private static readonly string HTTPS_PROTOCOL = "basichttpsbinding";
+        private static readonly string TCP_PROTOCOL = "nettcpbinding";
 
         private string _projectPath;
         private AnalyzerResult _analyzerResult;
@@ -28,14 +30,6 @@ namespace CTA.Rules.PortCore
         {
             _projectPath = projectPath;
             _analyzerResult = analyzerResult;
-        }
-
-        public void portWCFService()
-        {
-            if(isConfigBased())
-            {
-
-            }
         }
 
         public bool isConfigBased()
@@ -49,16 +43,13 @@ namespace CTA.Rules.PortCore
 
                 var containsServiceModel = config.ContainsElement("config/system.servicemodel");
 
-                return true;
+                if(containsServiceModel)
+                {
+                    return true;
+                }
             }
 
-            return true;
-        }
-
-
-        public void generateStartUpClass()
-        {
-
+            return false;
         }
 
         public SyntaxNode replaceProgramFile(SyntaxTree programTree)
@@ -67,64 +58,22 @@ namespace CTA.Rules.PortCore
             Dictionary<string, int> transportPort = new Dictionary<string, int>();
             if (isConfigBased())
             {
-                string configFile = Path.Combine(_projectPath, Rules.Config.Constants.WebConfig);
-                transportPort = getTransportAndPort(configFile);
+                string projectDir = _analyzerResult.ProjectResult.ProjectRootPath;
+                transportPort = getTransportAndPort(projectDir);
             }
             else
             {
-                Dictionary
+                ProjectWorkspace projectDir = _analyzerResult.ProjectResult;
+                transportPort = getTransportAndPort(projectDir);
             }
 
-
-
-            //transportPort.Add("http", 30);
-            //transportPort.Add("nettcp", 400);
-            //transportPort.Add("https", 25);
+            if(transportPort.IsNullOrEmpty())
+            {
+                return programTree.GetRoot();
+            }
 
             var newRoot = replaceProgramNode(transportPort, programTree);
             return newRoot;
-        }
-
-        public void portWCFService(string configFilePath)
-        {
-            Dictionary<string, int> transportPort = getTransportAndPort(configFilePath);
-
-
-            string programClass1 = @"class Program {
-            static void Main(string[] args)
-            {
-                WebHost.CreateDefaultBuilder(args)
-                 .UseKestrel(options => {
-                     options.ListenLocalhost(httpPort);
-                     options.Listen(address: IPAddress.Loopback, httpsPort, listenOptions =>
-                     {
-                         listenOptions.UseHttps(httpsOptions =>
-                         {
-#if NET472
-                          httpsOptions.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
-#endif // NET472
-                      });
-                         if (Debugger.IsAttached)
-                         {
-                             listenOptions.UseConnectionLogging();
-                         }
-                     });
-                 })
-                 .UseNetTcp(tcpPort)
-                 .UseStartup<Startup>();
-
-            }";
-
-            string programClass = @"
-
-class Program {
-            static void Main(string[] args)
-            {
-                WebHost.CreateDefaultBuilder(args)
-                 .UseKestrel(options => {})
-                 .UseStartup<Startup>();
-
-            }";
         }
 
         public static SyntaxNode replaceProgramNode(Dictionary<string, int> transportPort, SyntaxTree programTree)
@@ -137,38 +86,34 @@ class Program {
                              httpsOptions.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls;
                          }});
                      }});\n";
-
             string netTcpMethodExpression = @"UseNetTcp";
 
-            var optionsBlock = "";
-
-            var blockStatements = new List<StatementSyntax>();
-
             var tree = programTree;
-
             var root = tree.GetRoot();
 
-            var lambdaExpression = root.DescendantNodes().OfType<SimpleLambdaExpressionSyntax>().First();
+            var lambdaExpressionList = root.DescendantNodes().OfType<SimpleLambdaExpressionSyntax>();
+
+            if(lambdaExpressionList.IsNullOrEmpty())
+            {
+                return root;
+            }
+
+            var lambdaExpression = lambdaExpressionList.First();
 
             var block = lambdaExpression.Block;
-
             var newBlock = block;
 
             var parameter = lambdaExpression.Parameter;
 
             if (transportPort.ContainsKey(HTTP_PROTOCOL))
             {
-                httpListen = String.Format(httpListen, parameter.Identifier.ValueText, transportPort.GetValueOrDefault(HTTP_PROTOCOL));
-                optionsBlock += httpListen;
-                
+                httpListen = String.Format(httpListen, parameter.Identifier.ValueText, transportPort.GetValueOrDefault(HTTP_PROTOCOL));            
                 newBlock = block.AddStatements(SyntaxFactory.ParseStatement(httpListen));
             }
 
             if (transportPort.ContainsKey(HTTPS_PROTOCOL))
             {
                 httpsListen = String.Format(httpsListen, parameter.Identifier.ValueText, transportPort.GetValueOrDefault(HTTPS_PROTOCOL));
-                optionsBlock += httpsListen;
-
                 newBlock = newBlock.AddStatements(SyntaxFactory.ParseStatement(httpsListen));
             }
 
@@ -207,46 +152,48 @@ class Program {
             return root;
         }
 
-        public Dictionary<string, int> getTransportAndPort(ProjectWorkspace projectWorkspace)
+
+        public static Dictionary<string, int> getTransportAndPort(string projectDir)
         {
-
-        }
-
-        public Dictionary<string, int> getTransportAndPort(string configFilePath)
-        {
-            Configuration configuration = ConfigurationManager
-                .OpenMappedMachineConfiguration(new ConfigurationFileMap(configFilePath));
-
             Dictionary<string, int> transportPortMap = new Dictionary<string, int>();
+            Dictionary<string, List<string>> bindingsTransportMap = new Dictionary<string, List<string>>();
 
-            var section = ServiceModelSectionGroup.GetSectionGroup(configuration);
-            string transport = "";
-            int transportPort = 0; //CHANGE, CHECK BEST PRACTICE
+            WCFBindingAndTransportUtil.configBasedCheck(projectDir, bindingsTransportMap);
 
-            foreach (ServiceElement serviceElement in section.Services?.Services)
-            {
-                foreach (BaseAddressElement baseAddress in serviceElement.Host?.BaseAddresses)
-                {
-                    if (!String.IsNullOrEmpty(baseAddress.BaseAddress))
-                    {
-                        Uri url = new Uri(baseAddress.BaseAddress);
-                        if (url.Scheme == Uri.UriSchemeHttps)
-                        {
-                            transportPortMap.Add(HTTPS_PROTOCOL, url.Port);
-                        }
-                        else if (url.Scheme == Uri.UriSchemeNetTcp)
-                        {
-                            transportPortMap.Add(TCP_PROTOCOL, url.Port);
-                        }
-                        else if (url.Scheme == Uri.UriSchemeHttp)
-                        {
-                            transportPortMap.Add(HTTP_PROTOCOL, url.Port);
-                        }
-                    }
-                }
-            }
+            AddBinding(bindingsTransportMap, transportPortMap);
 
             return transportPortMap;
+        }
+
+        public static Dictionary<string, int> getTransportAndPort(ProjectWorkspace project)
+        {
+            Dictionary<string, int> transportPortMap = new Dictionary<string, int>();
+            Dictionary<string, List<string>> bindingsTransportMap = new Dictionary<string, List<string>>();
+
+            WCFBindingAndTransportUtil.codeBasedCheck(project, bindingsTransportMap);
+
+            AddBinding(bindingsTransportMap, transportPortMap);
+
+            return transportPortMap;
+        }
+
+        public static void AddBinding(Dictionary<string, List<string>> bindingsTransportMap, Dictionary<string, int> transportPortMap)
+        {
+            foreach (var binding in bindingsTransportMap.Keys)
+            {
+                if (binding == "basichttpbinding")
+                {
+                    transportPortMap.Add(binding, 8080);
+                }
+                else if (binding == "basichttpsbinding")
+                {
+                    transportPortMap.Add(binding, 8888);
+                }
+                else if (binding == "nettcpbinding")
+                {
+                    transportPortMap.Add(binding, 8000);
+                }
+            }
         }
     }
 }

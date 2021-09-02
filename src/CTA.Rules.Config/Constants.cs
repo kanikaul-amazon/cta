@@ -112,7 +112,9 @@ namespace CTA.Rules.Config
             new List<string> {"mvc","appsettings.json"},
             new List<string> {"mvc","Program.cs"},
             new List<string> {"mvc","Startup.cs" },
-            new List<string> {"webclasslibrary","appsettings.json" }
+            new List<string> {"webclasslibrary","appsettings.json" },
+            new List<string> {"wcfservice", "Program.cs"},
+            new List<string> {"wcfservice", "Startup.cs"}
         };
     }
 }
