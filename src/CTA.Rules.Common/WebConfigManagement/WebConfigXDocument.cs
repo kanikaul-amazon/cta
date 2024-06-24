@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using CTA.Rules.Common.Extensions;
 
 namespace CTA.Rules.Common.WebConfigManagement
@@ -22,6 +23,16 @@ namespace CTA.Rules.Common.WebConfigManagement
         public IEnumerable<XElement> GetConfigPropertiesByName(string propertyName)
         {
             return GetConfigProperties().Where(n => n.Name.LocalName == propertyName);
+        }
+
+        public XElement GetElementByPath(string path)
+        {
+            return _webConfig.XPathSelectElement(path);
+        }
+
+        public IEnumerable<XElement> GetElementsByPath(string path)
+        {
+            return _webConfig.XPathSelectElements(path);
         }
 
         public bool ContainsElement(string elementPath)

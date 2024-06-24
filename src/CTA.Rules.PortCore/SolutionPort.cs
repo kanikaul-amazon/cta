@@ -226,6 +226,10 @@ namespace CTA.Rules.PortCore
                         }
                     });
                 }
+                if (projectConfiguration.ProjectType == ProjectType.WCFService)
+                {
+                    allReferences.Add("corewcf");
+                }
             }
 
 
@@ -386,6 +390,10 @@ namespace CTA.Rules.PortCore
             else if (projectTypeFeatureResult.IsWebClassLibrary())
             {
                 return ProjectType.WebClassLibrary;
+            }
+            else if (projectTypeFeatureResult.IsWCFServiceProject())
+            {
+                return ProjectType.WCFService;
             }
             return ProjectType.ClassLibrary;
         }

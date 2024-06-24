@@ -49,6 +49,19 @@ namespace CTA.FeatureDetection.Common.Extensions
                 IEnumerable<string> semanticReturnTypes)
             => node.AllInvocationExpressions().Where(i => semanticReturnTypes.Contains(i.SemanticReturnType));
 
+        public static IEnumerable<UstNode> GetMethodDeclarations(this UstNode node)
+            => node.AllMethods();
+
+        /// <summary>
+        /// Get Invocation expressions by method name
+        /// </summary>
+        /// <param name="node">Syntax tree node to start searching from</param>
+        /// <param name="identifier">Method Name to search for</param>
+        /// <returns>Collection of invocation expressions with the given method name</returns>
+        public static IEnumerable<UstNode> GetInvocationExpressionByMethodName(this UstNode node,
+            string methodName)
+            => node.AllInvocationExpressions().Where(i => i.MethodName == methodName);
+
         /// <summary>
         /// Searches a syntax tree to identify all method declarations with the public accessor
         /// </summary>
@@ -103,6 +116,15 @@ namespace CTA.FeatureDetection.Common.Extensions
         /// <returns>Whether or not the class declaration node has the specified base type</returns>
         public static bool HasBaseType(this ClassDeclaration node, string baseTypeOriginalDefinition)
             => node.BaseTypeOriginalDefinition.Equals(baseTypeOriginalDefinition, StringComparison.OrdinalIgnoreCase);
+        
+        /// <summary>
+        /// Determine whether a given class inherits an interface
+        /// </summary>
+        /// <param name="node">Node to query</param>
+        /// <param name="interfaceName"></param>
+        /// <returns>Whether or not a class inherits an interface</returns>
+        public static bool InheritsInterface(this ClassDeclaration node, string interfaceName)
+            => node.Interfaces.Contains(interfaceName);
 
         /// <summary>
         /// Determines whether or not a node has the specified attribute
@@ -112,5 +134,14 @@ namespace CTA.FeatureDetection.Common.Extensions
         /// <returns>Whether or not the class declaration node has the specified attribute</returns>
         public static bool HasAttribute(this UstNode node, string attributeType)
             => node.AllAnnotations().Any(a => a.SemanticClassType?.Equals(attributeType, StringComparison.OrdinalIgnoreCase) == true);
+
+        /// <summary>
+        /// Get All Object Creation Expressions with given Semantic Namespace
+        /// </summary>
+        /// <param name="node">Node to query</param>
+        /// <param name="semanticNamespace">Semantic Namespace to search for</param>
+        /// <returns>List of Object Creation Expressions</returns>
+        public static IEnumerable<ObjectCreationExpression> GetObjectCreationExpressionBySemanticNamespace(this UstNode node, string semanticNamespace)
+            => node.AllObjectCreationExpressions().Where(o => o.SemanticNamespace.Equals(semanticNamespace));
     }
 }

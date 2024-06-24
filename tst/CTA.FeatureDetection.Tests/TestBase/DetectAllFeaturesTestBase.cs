@@ -15,6 +15,7 @@ namespace CTA.FeatureDetection.Tests.TestBase
         protected static IEnumerable<AnalyzerResult> MvcAnalyzerResults => TestProjectsSetupFixture.MvcAnalyzerResults;
         protected static IEnumerable<AnalyzerResult> WebApiAnalyzerResults => TestProjectsSetupFixture.WebApiAnalyzerResults;
         protected static IEnumerable<AnalyzerResult> WebClassLibraryAnalyzerResults => TestProjectsSetupFixture.WebClassLibraryAnalyzerResults;
+        protected static IEnumerable<AnalyzerResult> WCFAnalyzerResults => TestProjectsSetupFixture.WCFAnalyzerResults;
         protected static FeatureDetector FeatureDetector { get; private set; }
         protected static string TestProjectDirectory { get; private set; }
 
@@ -27,12 +28,16 @@ namespace CTA.FeatureDetection.Tests.TestBase
         protected FeatureDetectionResult _windowsAuthenticationFeatureDetectionResult;
         protected FeatureDetectionResult _formsAuthenticationFeatureDetectionResult;
         protected FeatureDetectionResult _federatedAuthenticationFeatureDetectionResult;
+        protected FeatureDetectionResult _wcfServiceFeatureDetectionResult;
+        protected FeatureDetectionResult _wcfSelfHostedFeatureDetectionResult;
 
         protected string CoreMvcProjectName => "CoreMVC";
         protected string CoreWebApiProjectName => "CoreWebApi";
         protected string MvcProjectName => "ASP.NET-MVC-Framework";
         protected string WebApiProjectName => "WebApi-Framework";
         protected string WebClassLibraryProjectName => "WebClassLibrary";
+        protected string WCFServiceProjectName => "GettingStartedLib";
+        protected string WCFSelfHostedServiceProjectName => "SelfHostedWCFService";
 
         [SetUp]
         public void SetUp()
@@ -48,6 +53,8 @@ namespace CTA.FeatureDetection.Tests.TestBase
             _windowsAuthenticationFeatureDetectionResult = TestProjectsSetupFixture.WindowsAuthenticationFeatureDetectionResult;
             _formsAuthenticationFeatureDetectionResult = TestProjectsSetupFixture.FormsAuthenticationFeatureDetectionResult;
             _federatedAuthenticationFeatureDetectionResult = TestProjectsSetupFixture.FederatedAuthenticationFeatureDetectionResult;
+            _wcfServiceFeatureDetectionResult = TestProjectsSetupFixture.WCFServiceFeatureDetectionResult;
+            _wcfSelfHostedFeatureDetectionResult = TestProjectsSetupFixture.WCFSelfHostedServiceFeatureDetectionResult;
         }
     }
 }
